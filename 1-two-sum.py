@@ -6,7 +6,7 @@ class Solution:
         for b in range(a+1, len(nums)):
           if nums[a] + nums[b] == target:
             return [a,b]
-    hashmap = True
+    hashmap = False
     if hashmap:
       pairs = {}
       for i in range(0, len(nums)):
@@ -15,6 +15,17 @@ class Solution:
         compliment = target - nums[i]
         if compliment in pairs:
           return [i, nums[compliment]]
+
+    oNHashmap = True
+    if oNHashmap:
+      pairs = {}
+      for i in range(0, len(nums)):
+        pairs[nums[i]] = i
+        compliment = target - nums[i]
+        if compliment in pairs:
+          if i == pairs[compliment]: continue
+          return [i, pairs[compliment]]
+
 
 
 
