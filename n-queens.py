@@ -71,7 +71,7 @@ class Solution:
         return None
         
                                 
-    def backtrack_queens(self,row = 0, col = 0):
+    def backtrack_queens(self,row = 0, count = 0):
         for col in range(self.n):
             # iterate through columns at the curent row.
             if self.is_not_under_attack(row, col):
