@@ -17,8 +17,23 @@ class Solution:
         self.prettyPrintMiniHash(self.miniHash)
         self.prettyPrintMiniHash(self.miniHash, columns=3)
         
-        if self.checkIfValueInMiniTile(6, 0):
-            print("found 6 in tile 0")
+#        self.placeValue(100, 0, 0)
+#        self.placeValue(100, 3, 4)
+#        self.placeValue(100, 8, 8)
+#        self.placeValue(100, 2, 7)
+#        self.removeValue(0,0)
+#        self.removeValue(0,1)
+#        self.removeValue(8,8)
+#        self.placeValue(100, 8, 8)
+#        if self.checkIfValueInMiniTile(6, 0):
+#            print("found 6 in tile 0")
+#        
+        self.prettyPrintMiniHash(self.miniHash, columns=3)
+       # self.prettyPrintRows(self.staticRow)
+       # self.prettyPrintCols(self.staticCol)
+        
+        self.backtrackTrivials(0, 0)
+        self.prettyPrintMiniHash(self.miniHash, columns=3)
 
         return None
         # print(self.board, self.tiles)
@@ -31,9 +46,53 @@ class Solution:
 # Trivial Solution tiles pseudocode
 # 1. for each minibox:
 # 2.   for number in (0,9):
+# 3a.    if number is in minibox: continue
 # 3.     if number is not in minibox:
-# 4.       
-#
+# 4.       if an empty tile exists:
+# 5.         if empty location is valid (i.e. not in row, not in col)
+#              if tempRow is set:
+#                remove(tempRow). i++. Backtrack
+#              else:
+#                place i, set temprow.
+#            else:
+#          else:
+#            keep going
+
+
+    def removeTrivialTiles(self):
+        self.tempRow, self.tempCol = None, None
+        for i in minibox:
+          backtrack(i)
+
+    def backtrackTrivials(self, whichMini, i):
+        for symbol in range(i, 10):
+          if self.checkIfValueInMiniTile(symbol, whichMini) == False:
+            miniRow, miniCol = None, None
+            for rowNum in range(3):#rowNum in sorted(list(self.miniHash[whichMini].keys())):
+              checkRow = self.miniHash[whichMini][rowNum]
+              miniRow = rowNum
+              miniCol = None
+              if checkRow[0] == '.':
+                miniCol = 0
+              elif checkRow[1] == '.':
+                miniCol = 1
+              elif checkRow[2] == '.':
+                miniCol = 2
+              if miniCol:
+                bigRow, bigCol = self.getLocationInBig(whichMini, miniRow, miniCol)
+                if self.checkIfValueInRow(symbol, bigRow) == False:
+                    if self.checkIfValueInCol(symbol, bigCol) == False:
+                        if self.tempRow and self.tempCol:
+                            self.removeValue(self.tempRow, self.tempCol)
+                            self.backtrackTrivials(whichMini, i + 1)
+                            break
+                        else:
+                            self.placeValue(symbol, bigRow, bigCol)
+                            self.tempRow, self.tempCol = bigRow, bigCol
+            self.tempRow, self.tempCol = None, None
+
+
+
 #
 #
         
@@ -108,6 +167,7 @@ class Solution:
 
 
     def prettyPrintMiniHash(self, miniHash, columns=1):
+        print(type(miniHash[0][0]))
         if columns == 1:
             for tile in range(9):
                 print(miniHash[tile][0])
@@ -125,7 +185,47 @@ class Solution:
         print("You only need to print 1 or 3 columns at a time...")
         return False
 
-            
+    def getLocationInBig(self, miniNum, miniRow, miniCol):
+        col = miniNum * 3  + miniCol
+        row = (miniNum // 3) * 3 + miniRow
+        return col, row
+
+    def getLocationInMini(self, row, col): 
+        if row < 3:
+            miniRow = row
+            if col < 3:
+              miniNum = 0
+              miniCol = col
+            elif col < 6:
+              miniNum = 1
+              miniCol = col -3
+            elif col < 9:
+              miniNum = 2
+              miniCol = col - 6
+        elif row < 6:
+            miniRow = row - 3
+            if col < 3:
+              miniNum = 3
+              miniCol = col
+            elif col < 6:
+              miniNum = 4
+              miniCol = col -3
+            elif col < 9:
+              miniNum = 5
+              miniCol = col - 6
+        elif row < 9:
+            miniRow = row - 6
+            if col < 3:
+              miniNum = 6
+              miniCol = col
+            elif col < 6:
+              miniNum = 7
+              miniCol = col -3
+            elif col < 9:
+              miniNum = 8
+              miniCol = col - 6
+
+        return miniNum, miniRow, miniCol 
 
     def checkIfValueInMiniTile(self, value, tileNumber):
         if str(value) in self.miniHash[tileNumber][0] or str(value) in self.miniHash[tileNumber][1] or str(value) in self.miniHash[tileNumber][2]:
@@ -133,12 +233,12 @@ class Solution:
         return False
 
     def checkIfValueInRow(self, value, row):
-        if str(value) in self.rowHash(row):
+        if str(value) in self.staticRow(row):
             return True
         return False
 
     def checkIfValueInCol(self, value, col):
-        if str(value) in self.colHash(col):
+        if str(value) in self.staticCol(col):
             return True
         return False
 
@@ -146,22 +246,27 @@ class Solution:
 
     def placeTempValueInMiniTile(self, value, tileNumber):
         row, col = 0, 0
+        tempRow, tempCol = None, None
         for row in range(3):
-            for col in range(3):
+            for col in range(3): 
                 if self.miniTiles[tileNumber][row][col] == value:
                     print(value, "is already in tile", tileNumber)
                     return False
-
-        return True
+                else:
+                    if not tempRow and not tempCol:
+                        tempRow, tempCol = row, col
+        return tempRow, tempCol
         pass
         
     def placeValue(self, value, row, col):
-        if self.rowHash[row][col] != str('.'): 
+        if self.staticRow[row][col] != str('.'): 
             print("value already there")
-        if self.rowHash[col][row] != str('.'): 
+            return False
+        if self.staticRow[col][row] != str('.'): 
             print("value already there")
-        self.rowHash[row][col] = str(value)
-        self.colHash[col][row] = str(value)
+            return False
+        self.staticRow[row][col] = str(value)
+        self.staticRow[col][row] = str(value)
 
         if row < 3:
             if col < 3:
@@ -172,26 +277,58 @@ class Solution:
               self.miniHash[2][row][col-6] = str(value)
         elif row < 6:
             if col < 3:
-              self.miniHash[3][row][col] = str(value)
+              self.miniHash[3][row-3][col] = str(value)
             elif col < 6:
-              self.miniHash[4][row][col-3] = str(value)
+              self.miniHash[4][row-3][col-3] = str(value)
             elif col < 9:
-              self.miniHash[5][row][col-6] = str(value)
+              self.miniHash[5][row-3][col-6] = str(value)
         elif row < 9:
             if col < 3:
-              self.miniHash[6][row][col] = str(value)
+              self.miniHash[6][row-6][col] = str(value)
             elif col < 6:
-              self.miniHash[7][row][col-3] = str(value)
+              self.miniHash[7][row-6][col-3] = str(value)
             elif col < 9:
-              self.miniHash[8][row][col-6] = str(value)
+              self.miniHash[8][row-6][col-6] = str(value)
         print("Inserted", value, "into all tables.")
 
 
+    def removeValue(self, row, col):
+        if self.staticRow[row][col] == str('.'): 
+            print("value not there")
+            return False
+        if self.staticRow[col][row] == str('.'): 
+            print("value not there")
+            return False
+        popped = self.staticRow[row][col]
+        self.staticRow[row][col] = str('.')
+        self.staticCol[col][row] = str('.')
+
+        if row < 3:
+            if col < 3:
+              self.miniHash[0][row][col] = str('.')
+            elif col < 6:
+              self.miniHash[1][row][col-3] = str('.')
+            elif col < 9:
+              self.miniHash[2][row][col-6] = str('.')
+        elif row < 6:
+            if col < 3:
+              self.miniHash[3][row-3][col] = str('.')
+            elif col < 6:
+              self.miniHash[4][row-3][col-3] = str('.')
+            elif col < 9:
+              self.miniHash[5][row-3][col-6] = str('.')
+        elif row < 9:
+            if col < 3:
+              self.miniHash[6][row-6][col] = str('.')
+            elif col < 6:
+              self.miniHash[7][row-6][col-3] = str('.')
+            elif col < 9:
+              self.miniHash[8][row-6][col-6] = str('.')
+        print("Inserted", '.', "into all tables.")
+        return popped
 
 
-        
 
-        rowHash[row] = value
 
 
 
