@@ -14,7 +14,7 @@ class Solution:
         Do not return anything, modify board in-place instead.
         """
 
-# Original work:
+        # Original work:
 
         # Setting up data structures
         self.linear_list        = self.generate_linear_list(board)
@@ -25,53 +25,53 @@ class Solution:
         # Main function - returns False if no solution available.
         return self.backtrack(0)
 
-# Backtrack function
+    # Backtrack function
     def backtrack(self, linear_pos):
-      """Backtrack function. The main loop for the Sudoku Solver.
-      We start in the top-left corner of the Sudoku puzzle. We move left to right,
-      then top to bottom.  We always skip boxes that were filled in when we received
-      the puzzle.  For each empty box, we check if every number from 1 to 9 inclusive would
-      be a legal move.  When a legal move is found, we backtrack by starting the process
-      over again with the next box.  There is only one solution, so if we reach the solution
-      for the last box, we are finished, and can slowly exit the function."""
+        """Backtrack function. The main loop for the Sudoku Solver.
+        We start in the top-left corner of the Sudoku puzzle. We move left to right,
+        then top to bottom.  We always skip boxes that were filled in when we received
+        the puzzle.  For each empty box, we check if every number from 1 to 9 inclusive would
+        be a legal move.  When a legal move is found, we backtrack by starting the process
+        over again with the next box.  There is only one solution, so if we reach the solution
+        for the last box, we are finished, and can slowly exit the function."""
 
-      if linear_pos > 80:
-        # Puzzle is complete.
-        return True
-      if self.back_up_linear_list[linear_pos] != '.':
-        return self.backtrack(linear_pos + 1)
-      else: 
-        for new_value in range(1, 10): 
-          if self.is_valid_move(linear_pos, new_value):
-            self.place_number(linear_pos, new_value)
-            if self.backtrack(linear_pos + 1):
-              return True
-            self.place_number(linear_pos, '.')
-          else: 
-            self.place_number(linear_pos, '.')
-        return False
+        if linear_pos > 80:
+            # Puzzle is complete.
+            return True
+        if self.back_up_linear_list[linear_pos] != '.':
+            return self.backtrack(linear_pos + 1)
+        else:
+            for new_value in range(1, 10):
+                if self.is_valid_move(linear_pos, new_value):
+                    self.place_number(linear_pos, new_value)
+                    if self.backtrack(linear_pos + 1):
+                        return True
+                    self.place_number(linear_pos, '.')
+                else:
+                    self.place_number(linear_pos, '.')
+            return False
 
-# Helper functions
+    # Helper functions
     def is_valid_move(self, linear_pos, new_value):
-      """Checks if placing this value would break the Sudoku rules.
-      Recall that each number must be present in its row, column, and box exactly once each.
-      If that number that already exists in a given row, column, and box, return False.
-      If that number can be added to the given row, column, and box, return True. """
+        """Checks if placing this value would break the Sudoku rules.
+        Recall that each number must be present in its row, column, and box exactly once each.
+        If that number that already exists in a given row, column, and box, return False.
+        If that number can be added to the given row, column, and box, return True. """
 
-      str_of_value = str(new_value)
-      board_row = linear_pos // 9
-      board_col = linear_pos - (board_row * 9)
-      mini_row = board_row // 3
-      mini_col = board_col // 3
+        str_of_value = str(new_value)
+        board_row = linear_pos // 9
 
-      if str_of_value in self.board_pointer[board_row]:
-          return False
-      elif any(str_of_value in x[board_col] for x in self.board_pointer):
-          return False
-      elif str_of_value in self.mini_board_array[mini_row][mini_col]:
-          return False
-      return True
- 
+        if str_of_value in self.board_pointer[board_row]:
+            return False
+        board_col = linear_pos - (board_row * 9)
+        if any(str_of_value in x[board_col] for x in self.board_pointer):
+            return False
+        mini_row = board_row // 3
+        mini_col = board_col // 3
+        if str_of_value in self.mini_board_array[mini_row][mini_col]:
+            return False
+        return True
+
     def place_number(self, linear_pos, new_value):
         """Places a value in each of the data structures used to store the Sudoku data.
         - board (the given array)
@@ -88,8 +88,8 @@ class Solution:
         self.board_pointer[board_row][board_col] = str_of_value
         self.mini_board_array[mini_row][mini_col][mini_linear_pos] = str_of_value
         self.linear_list[linear_pos] = str_of_value
- 
- # Generating the data types
+
+    # Generating the data types
 
     def generate_linear_list(self, list_array):
         """This flattens the sudoku board into one long string of numbers. The first element is
@@ -97,8 +97,8 @@ class Solution:
 
         big_list = []
         for x in range(9):
-          for y in range(9):
-            big_list.append(list_array[x][y])
+            for y in range(9):
+                big_list.append(list_array[x][y])
         return big_list
 
     def generate_complete_mini_board_array(self, board):
@@ -109,9 +109,9 @@ class Solution:
 
         mini_board_array = [  [ [],[],[] ] , [ [],[],[] ] , [ [],[],[] ]  ]
         for board_row in range(9):
-          for board_col in range(9):
-              mini_row = board_row // 3
-              mini_col = board_col // 3
-              mini_board_array[mini_row][mini_col].append(board[board_row][board_col])
+            for board_col in range(9):
+                mini_row = board_row // 3
+                mini_col = board_col // 3
+                mini_board_array[mini_row][mini_col].append(board[board_row][board_col])
         return mini_board_array
  
