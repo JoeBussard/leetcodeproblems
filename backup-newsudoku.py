@@ -28,109 +28,16 @@ class Solution:
           print(row[2])
 
         for firstTwo in range(2):
-          self.testAccess(firstTwo)
+          self.testCheckers(firstTwo)
 
         for lastFive in range(75,81):
-          self.testAccess(lastFive)
+          self.testCheckers(lastFive)
 
-        print("printing rowHash")
-        print(self.rowHash)
-        print("printing keys and values in rowHash")
-#        for k,v in self.rowHash[0].keys(), self.rowHash[0].values():
-#          print(k,v)
-        self.testValid(0, 5)
-        self.testValid(0, 2)
-        print("Assert: False because of 7 in row 0.")
-        self.testValid(2, 7)
-        print("Assert: False because of 6 in minibox 0 0")
-        self.testValid(2, 6)
-        print("#################")
-        print("Assert: False because value already exists at pos 0")
-        self.testMultipleValid(0)
-        print("Assert: Some value will be allowed.")
-        self.testMultipleValid(2)
         return None
         # print(self.board, self.tiles)
 
 
 ######### TESTING / DEBUGGING FUNCTIONS ################
-
-
-    def testBacktrack(self, linearPos, startValue):
-        for newValue in range(1, startValue):
-          
-      pass
-
-            
-
-
-    def testMultipleValid(self, linearPos):
-      """this function checks if any of the possible values are valid for a given square."""
-      for newValue in range(1,10):
-            strValue = str(newValue)
-            boardRow = linearPos // 9
-            boardCol = linearPos - (boardRow * 9)
-            miniRow = boardRow // 3
-            miniCol = boardCol // 3
-            print("I am seeing if", newValue, "fits in")
-            print("Row", boardRow, ", Column", boardCol, ", Mini (", miniRow, miniCol,")")
-    
-            if self.linearList[linearPos] != '.':
-                print("It won't fit because there is already a number there:", self.linearList[linearPos])
-                return
-            else:
-                print("[", boardRow, ",", boardCol, "] is empty.")
-                print("Checking if there is a", newValue, "in rows:", self.rowHash[boardRow])
-                print("Checking if there is a", newValue, "in cols:", self.colHash[boardCol])
-                print("Checking if there is a", newValue, "in mini:", self.miniArray[miniRow][miniCol])
-                if strValue in self.rowHash[boardRow]:
-                    print("[Row]: There is already a", strValue, "in row", boardRow, "at", self.rowHash[boardRow].index(strValue))
-                elif strValue in self.colHash[boardCol]:
-                    print("[Column]: There is already a", strValue, "in column", boardCol, "at", self.colHash[boardCol].index(strValue))
-                elif strValue in self.miniArray[miniRow][miniCol]:
-                    print("[Mini]: There is already a", strValue, "in mini box (", miniRow, miniCol, ")")
-                else:
-                    print("You are allowed to put", newValue, "in row", boardRow, "column", boardCol)
-    
-            print("Finishing checking all posibilities for", boardRow, boardCol)
-
-    def quietTestMultipleValid(self, linearPos):
-      """This checks if a given tile is valid, but it does not make noise. Returns false if not valid."""
-      for newValue in range(1,10):
-            strValue = str(newValue)
-            boardRow = linearPos // 9
-            boardCol = linearPos - (boardRow * 9)
-            miniRow = boardRow // 3
-            miniCol = boardCol // 3
-            #print("I am seeing if", newValue, "fits in")
-            #print("Row", boardRow, ", Column", boardCol, ", Mini (", miniRow, miniCol,")")
-    
-            if self.linearList[linearPos] != '.':
-                #print("It won't fit because there is already a number there:", self.linearList[linearPos])
-                return
-            else:
-                #print("[", boardRow, ",", boardCol, "] is empty.")
-                #print("Checking if there is a", newValue, "in rows:", self.rowHash[boardRow])
-                #print("Checking if there is a", newValue, "in cols:", self.colHash[boardCol])
-                #print("Checking if there is a", newValue, "in mini:", self.miniArray[miniRow][miniCol])
-                if strValue in self.rowHash[boardRow]:
-                    return False
-                #    print("[Row]: There is already a", strValue, "in row", boardRow, "at", self.rowHash[boardRow].index(strValue))
-                elif strValue in self.colHash[boardCol]:
-                    return False
-                #    print("[Column]: There is already a", strValue, "in column", boardCol, "at", self.colHash[boardCol].index(strValue))
-                elif strValue in self.miniArray[miniRow][miniCol]:
-                    return False
-                #    print("[Mini]: There is already a", strValue, "in mini box (", miniRow, miniCol, ")")
-                else:
-                    return True
-                #    print("You are allowed to put", newValue, "in row", boardRow, "column", boardCol)
-    
-            #print("Finishing checking all posibilities for", boardRow, boardCol)
-
-
-
-
     def compareRowAndCol(self):
         """This is useful if you want to check that your rows and cols were made properly."""
         #print(self.staticRow[5])
@@ -140,9 +47,8 @@ class Solution:
         #print(self.staticRow[0][8])
        # print(self.staticCol[8][0])
 
-
-    def testAccess(self, linearPos):
-        """ Testing if we are accessing numbers properly, in row,, linear,
+    def testCheckers(self, linearPos):
+        """ Testing if we can check if a number is not in a row,
         column, or miniboard."""
         boardRow = linearPos // 9
         boardCol = linearPos - (boardRow * 9)
@@ -155,36 +61,8 @@ class Solution:
         print("[Linear] Current Value:", self.linearList[linearPos])
         print("[Row]  Current Value:", self.rowHash[boardRow][boardCol])
         print("[Column] Current Value:", self.colHash[boardCol][boardRow])
-        print("[Mini] Current neighbors:", self.miniArray[miniRow][miniCol])
         
-
-    def testValid(self, linearPos, newValue):
-        strValue = str(newValue)
-        boardRow = linearPos // 9
-        boardCol = linearPos - (boardRow * 9)
-        miniRow = boardRow // 3
-        miniCol = boardCol // 3
-        print("I am seeing if", newValue, "fits in")
-        print("Row", boardRow, ", Column", boardCol, ", Mini (", miniRow, miniCol,")")
-
-        if self.linearList[linearPos] != '.':
-            print("It won't fit because there is already a number there:", self.linearList[linearPos])
-            return
-        else:
-            print("[", boardRow, ",", boardCol, "] is empty.")
-            print("Checking if there is a", newValue, "in rows:", self.rowHash[boardRow])
-            print("Checking if there is a", newValue, "in cols:", self.colHash[boardCol])
-            print("Checking if there is a", newValue, "in mini:", self.miniArray[miniRow][miniCol])
-            if strValue in self.rowHash[boardRow]:
-                print("[Row]: There is already a", strValue, "in row", boardRow, "at", self.rowHash[boardRow].index(strValue))
-            if strValue in self.colHash[boardCol]:
-                print("[Column]: There is already a", strValue, "in column", boardCol, "at", self.colHash[boardCol].index(strValue))
-            if strValue in self.miniArray[miniRow][miniCol]:
-                print("[Mini]: There is already a", strValue, "in mini box (", miniRow, miniCol, ")")
-
-        print("You are allowed to put", newValue, "in row", boardRow, "column", boardCol)
-
-              #  mydict.keys()[list(mydict.values()).index(16)]
+        
 
 ########## DATA TYPE GENERATING FUNCTIONS ##################
     def generateLinear(self, listArray):
@@ -499,6 +377,4 @@ class Solution:
             dynamic[row][col] = guess
             linear[linearPos] = guess
 #            self.backtrackRobot(row, col, tryNumber, dynamic, static, rowHash, colHash
-
-
-
+   
