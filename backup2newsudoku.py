@@ -19,7 +19,6 @@ class Solution:
         self.fillMiniArrayListsFrom2D(self.miniArray, board)
         self.backUpBoard = self.generateBackup(board)
         self.backUpLinear = self.generateLinear(board)
-        self.boardPointer = board
 
         self.prettyPrintMiniHash(self.miniHash, columns=3)
         print(self.linearList)
@@ -61,9 +60,8 @@ class Solution:
 #         print('col', self.colHash[4])
 #         print('mini', self.miniArray[1][1])
 #         print(self.linearList[49:52])
-        #print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+        print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
         self.testBacktrack(0)
-        print(self.linearList)
         # print(self.board, self.tiles)
 
 
@@ -71,41 +69,28 @@ class Solution:
 
 
     def testBacktrack(self, linearPos):
-#      print("Entered backtrack at", linearPos)
-      if linearPos > 79:
-        print(self.linearList)
+      print("Entered backtrack at", linearPos)
+      if linearPos == 80:
         print("Reached the end....???")
-        return True
-
+        return
       if self.backUpLinear[linearPos] != '.':
-#        print("Backup exists at", linearPos)
+        print("Backup exists at", linearPos)
         # do not change any given numbers
-        #if linearPos == 80: return
-        return self.testBacktrack(linearPos + 1)
+        self.testBacktrack(linearPos + 1)
         pass
       else: #if self.linearList[linearPos] == '.':
-#j        print("No backup at", linearPos)
+        print("No backup at", linearPos)
         for newValue in range(1, 10): 
           if self.quietTestForPosAndValue(linearPos, newValue):
- #            print("I can place", newValue, "at", linearPos)
+             print("I can place", newValue, "at", linearPos)
              self.quietTestPlacement(linearPos, newValue)
-             if linearPos+1 == 80:
-               print("I am placing the last tile.")
-             elif linearPos+1 == 79:
-               print("I am placing the SECOND TO LAST TILE.")
-             finished = self.testBacktrack(linearPos + 1)
- #j            if newValue <9: print(newValue, "did not work out. trying", newValue+1)
-
-             if finished: return True
+             self.testBacktrack(linearPos +1)
+             if newValue <9: print(newValue, "did not work out. trying", newValue+1)
              self.quietTestPlacement(linearPos, '.')
-             
-          else: 
-            #if linearPos == 80:return
-            self.quietTestPlacement(linearPos, '.')
+          else:
             continue
-        if (linearPos > 60): print("I am unable to place a number here. Have to go back.")
-        return False
-        #@self.quietTestPlacement(linearPos, '.')
+        print("I am unable to place a number here. Have to go back.")
+        self.quietTestPlacement(linearPos, '.')
 
 
 
@@ -187,7 +172,6 @@ class Solution:
     
       if self.linearList[linearPos] != '.':
           #print("It won't fit because there is already a number there:", self.linearList[linearPos])
-          return True # ADDED THIS TODO TODO JOE REMOVE MAYBE
           return
       else:
           #print("[", boardRow, ",", boardCol, "] is empty.")
@@ -230,20 +214,19 @@ class Solution:
 #        elif strValue in self.miniArray[miniRow][miniCol]:
 #            print("[Mini]: There is already a", strValue, "in mini box (", miniRow, miniCol, ")")
 #            return
-#        if True: #TODO REMOVE THIS DELETE THIS
-#            if self.rowHash[boardRow][boardCol] != ".":
-#                print("[Row]:", boardRow, boardCol, "is occupied by", self.rowHash[boardRow][boardCol])
-#            if self.colHash[boardCol][boardRow] != ".":
-#                print("[Col]:", boardCol, boardRow, "is occupied by", self.colHash[boardCol][boardRow])
-#            if self.miniArray[miniRow][miniCol][miniPos] != '.':
-#                print("[Mini]: Mini Box", miniRow, miniCol, "at position", miniPos, "is", self.miniArray[miniRow][miniCol][miniPos])
+        if True: #TODO REMOVE THIS DELETE THIS
+            if self.rowHash[boardRow][boardCol] != ".":
+                print("[Row]:", boardRow, boardCol, "is occupied by", self.rowHash[boardRow][boardCol])
+            if self.colHash[boardCol][boardRow] != ".":
+                print("[Col]:", boardCol, boardRow, "is occupied by", self.colHash[boardCol][boardRow])
+            if self.miniArray[miniRow][miniCol][miniPos] != '.':
+                print("[Mini]: Mini Box", miniRow, miniCol, "at position", miniPos, "is", self.miniArray[miniRow][miniCol][miniPos])
         # REMOVE
         #print("Inserting anyways...")
         self.rowHash[boardRow][boardCol] = strValue
         self.colHash[boardCol][boardRow] = strValue
         self.miniArray[miniRow][miniCol][miniPos] = strValue
         self.linearList[linearPos] = strValue
-        self.boardPointer[boardRow][boardCol] = strValue
         #print("Inserted.")
  
     def testPlacement(self, linearPos, newValue):
