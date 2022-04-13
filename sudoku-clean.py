@@ -17,10 +17,10 @@ class Solution:
         # Original work:
 
         # Setting up data structures
-        self.linear_list        = self.generate_linear_list(board)
-        self.back_up_linear_list      = self.generate_linear_list(board)
-        self.mini_board_array    = self.generate_complete_mini_board_array(board)
-        self.board_pointer      = board
+        self.linear_list            = self.generate_linear_list(board)
+        self.back_up_linear_list    = self.generate_linear_list(board)
+        self.mini_board_array       = self.generate_complete_mini_board_array(board)
+        self.board_pointer          = board
 
         # Main function - returns False if no solution available.
         return self.backtrack(0)
@@ -59,8 +59,8 @@ class Solution:
         If that number can be added to the given row, column, and box, return True. """
 
         str_of_value = str(new_value)
-        board_row = linear_pos // 9
 
+        board_row = linear_pos // 9
         if str_of_value in self.board_pointer[board_row]:
             return False
         board_col = linear_pos - (board_row * 9)
@@ -78,12 +78,12 @@ class Solution:
         - miniArray (the array used to track the 9 mini-boards)
         - linear_list (the list that represents the entire board stretched to 1 dimension)"""
 
-        str_of_value = str(new_value)
-        board_row = linear_pos // 9
-        board_col = linear_pos - (board_row * 9)
-        mini_row = board_row // 3
-        mini_col = board_col // 3
-        mini_linear_pos = (board_row % 3) * 3 + (board_col %3)
+        str_of_value      = str(new_value)
+        board_row         = linear_pos // 9
+        board_col         = linear_pos - (board_row * 9)
+        mini_row          = board_row // 3
+        mini_col          = board_col // 3
+        mini_linear_pos   = (board_row % 3) * 3 + (board_col %3)
 
         self.board_pointer[board_row][board_col] = str_of_value
         self.mini_board_array[mini_row][mini_col][mini_linear_pos] = str_of_value
@@ -107,7 +107,7 @@ class Solution:
         Each mini board just gets an ordered list of the numbers inside it.
         I used magic to map the 3D array of mini-boards to the main board itself."""
 
-        mini_board_array = [  [ [],[],[] ] , [ [],[],[] ] , [ [],[],[] ]  ]
+        mini_board_array = [  [ [],[],[] ], [ [],[],[] ], [ [],[],[] ]  ]
         for board_row in range(9):
             for board_col in range(9):
                 mini_row = board_row // 3
