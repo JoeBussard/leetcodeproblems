@@ -11,28 +11,24 @@ class Solution:
         """
 ############# ORIGINAL WORK ##################
 ############### TESTING ###################
-        #self.rowHash = self.generateRowHash(board)
-        #self.colHash = self.generateColHash(board)
-
-        #[x for x in self.boardPointer]
-
-
-#        self.miniHash = self.generateMiniTileHashAsRows(board, [[x[i]] for x in board for i in range(9)])
+        self.rowHash = self.generateRowHash(board)
+        self.colHash = self.generateColHash(board)
+        self.miniHash = self.generateMiniTileHashAsRows(self.rowHash, self.colHash)
         self.linearList = self.generateLinear(board)
         self.miniArray = self.generateEmptyMiniArrayLists()
         self.fillMiniArrayListsFrom2D(self.miniArray, board)
-#        self.backUpBoard = self.generateBackup(board)
+        self.backUpBoard = self.generateBackup(board)
         self.backUpLinear = self.generateLinear(board)
         self.boardPointer = board
 
-#        self.prettyPrintMiniHash(self.miniHash, columns=3)
-#        print(self.linearList)
-#        print(self.miniArray)
-#        miniArray = self.miniArray
-#        for row in miniArray:
-#          print(row[0])
-#          print(row[1])
-#          print(row[2])
+        self.prettyPrintMiniHash(self.miniHash, columns=3)
+        print(self.linearList)
+        print(self.miniArray)
+        miniArray = self.miniArray
+        for row in miniArray:
+          print(row[0])
+          print(row[1])
+          print(row[2])
 
 #         for firstTwo in range(2):
 #           self.testAccess(firstTwo)
@@ -67,7 +63,7 @@ class Solution:
 #         print(self.linearList[49:52])
         #print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
         self.testBacktrack(0)
-        #print(self.linearList)
+        print(self.linearList)
         # print(self.board, self.tiles)
 
 
@@ -93,11 +89,10 @@ class Solution:
           if self.quietTestForPosAndValue(linearPos, newValue):
  #            print("I can place", newValue, "at", linearPos)
              self.quietTestPlacement(linearPos, newValue)
-             #if linearPos+1 == 80:
-             #  pass
-             #  print("I am placing the last tile.")
-             #elif linearPos+1 == 79:
-             #  print("I am placing the SECOND TO LAST TILE.")
+             if linearPos+1 == 80:
+               print("I am placing the last tile.")
+             elif linearPos+1 == 79:
+               print("I am placing the SECOND TO LAST TILE.")
              finished = self.testBacktrack(linearPos + 1)
  #j            if newValue <9: print(newValue, "did not work out. trying", newValue+1)
 
@@ -199,10 +194,10 @@ class Solution:
           #print("Checking if there is a", newValue, "in rows:", self.rowHash[boardRow])
           #print("Checking if there is a", newValue, "in cols:", self.colHash[boardCol])
           #print("Checking if there is a", newValue, "in mini:", self.miniArray[miniRow][miniCol])
-          if strValue in self.boardPointer[boardRow]:
+          if strValue in self.rowHash[boardRow]:
               return False
           #    print("[Row]: There is already a", strValue, "in row", boardRow, "at", self.rowHash[boardRow].index(strValue))
-          elif any(strValue in x[boardCol] for x in self.boardPointer):
+          elif strValue in self.colHash[boardCol]:
               return False
           #    print("[Column]: There is already a", strValue, "in column", boardCol, "at", self.colHash[boardCol].index(strValue))
           elif strValue in self.miniArray[miniRow][miniCol]:
@@ -244,9 +239,11 @@ class Solution:
 #                print("[Mini]: Mini Box", miniRow, miniCol, "at position", miniPos, "is", self.miniArray[miniRow][miniCol][miniPos])
         # REMOVE
         #print("Inserting anyways...")
-        self.boardPointer[boardRow][boardCol] = strValue
+        self.rowHash[boardRow][boardCol] = strValue
+        self.colHash[boardCol][boardRow] = strValue
         self.miniArray[miniRow][miniCol][miniPos] = strValue
         self.linearList[linearPos] = strValue
+        self.boardPointer[boardRow][boardCol] = strValue
         #print("Inserted.")
  
     def testPlacement(self, linearPos, newValue):
