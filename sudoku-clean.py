@@ -1,8 +1,6 @@
-
 #!/bin/python
 # Joe Bussard
-# All code after the line that says "Original Work" is Copyright Joe Bussard 2022
-# and licensed under GPL v2
+# GPL v2
 
 class Solution:
     def solveSudoku(self, board: List[List[str]]) -> None:
