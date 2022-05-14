@@ -1,4 +1,3 @@
-
 class Solution:
     def numUniqueEmails(self, emails: List[str]) -> int:
       legit_emails = set()
@@ -9,6 +8,3 @@ class Solution:
           localname = localname.split("+")[0]
           legit_emails.add(localname + '@' + domainname)
       return len(legit_emails)
-
-          
-
